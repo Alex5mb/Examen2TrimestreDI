@@ -5,4 +5,5 @@ module com.mycompany.examen2trimestrefx {
 
     opens com.mycompany.examen2trimestrefx to javafx.fxml;
     exports com.mycompany.examen2trimestrefx;
+    requires jasperreports;
 }

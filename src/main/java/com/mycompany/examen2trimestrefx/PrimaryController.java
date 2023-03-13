@@ -5,18 +5,28 @@
 package com.mycompany.examen2trimestrefx;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -28,21 +38,21 @@ public class PrimaryController implements Initializable {
     @FXML
     private TextField nombre_input;
     @FXML
-    private TextField eie_input;
+    private Spinner<Integer> eie_input;
     @FXML
-    private TextField psp_input;
+    private Spinner<Integer> psp_input;
     @FXML
-    private TextField pmdm_input;
+    private Spinner<Integer> pmdm_input;
     @FXML
-    private TextField di_input;
+    private Spinner<Integer> di_input;
     @FXML
-    private TextField sge_input;
+    private Spinner<Integer> sge_input;
     @FXML
-    private TextField ad_input;
+    private Spinner<Integer> ad_input;
     @FXML
     private TextField apellido_input;
     @FXML
-    private TextField hlc_input;
+    private Spinner<Integer> hlc_input;
     @FXML
     private TableColumn<String, String> nombre_column;
     @FXML
@@ -77,10 +87,17 @@ public class PrimaryController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        
+       
          ObservableList<String> alumnoLista = FXCollections.observableArrayList();
    
+         ad_input.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10,0));
+         sge_input.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10,0));
+         di_input.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10,0));
+         pmdm_input.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10,0));
+         psp_input.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10,0));
+         eie_input.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10,0));
+         hlc_input.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,10,0));
+         
         nombre_column.setCellValueFactory(new PropertyValueFactory("nombre"));
         apellido_column.setCellValueFactory(new PropertyValueFactory("apellido"));
         ad_column.setCellValueFactory(new PropertyValueFactory("ad"));
@@ -91,37 +108,77 @@ public class PrimaryController implements Initializable {
         eie_column.setCellValueFactory(new PropertyValueFactory("eie"));
         hlc_column.setCellValueFactory(new PropertyValueFactory("hlc"));
         
+        
+        
+        
+       lista_alumno.setOnMouseClicked(event ->{
+           Alumno alumnoSeleccionado = lista_alumno.getSelectionModel().getSelectedItem();
+           
+           if(alumnoSeleccionado != null){
+               
+               Stage modalStage = new Stage();
+               
+               modalStage.setTitle("Alumno");
+               modalStage.setResizable(false);
+               modalStage.initModality(Modality.APPLICATION_MODAL);
+               
+               
+               Pane modalPane = new Pane();
+               modalPane.setStyle("-fx-background-color: white;");
+               
+               int nota_media = (alumnoSeleccionado.getAd() + alumnoSeleccionado.getDi()
+                       + alumnoSeleccionado.getEie() + alumnoSeleccionado.getHlc() + alumnoSeleccionado.getPmdm() +
+                       alumnoSeleccionado.getPsp() + alumnoSeleccionado.getSge())/7;
+               
+               ArrayList suspensos = new ArrayList();
+               
+               if(alumnoSeleccionado.getAd() < 5){
+                   suspensos.add("AD");
+               }
+                if(alumnoSeleccionado.getDi() < 5){
+                   suspensos.add("DI");
+               }
+                 if(alumnoSeleccionado.getEie() < 5){
+                   suspensos.add("EIE");
+               }
+                  if(alumnoSeleccionado.getHlc() < 5){
+                   suspensos.add("HLC");
+               }
+                   if(alumnoSeleccionado.getPmdm() < 5){
+                   suspensos.add("PMDM");
+               }
+                    if(alumnoSeleccionado.getPsp() < 5){
+                   suspensos.add("PSP");
+               }
+                     if(alumnoSeleccionado.getSge() < 5){
+                   suspensos.add("SGE");
+               }
+                     
+               Label labelNombre = new Label(alumnoSeleccionado.getNombre() + " " + alumnoSeleccionado.getApellido());
+               labelNombre.setLayoutY(20);
+               Label labelNotamedia = new Label("la nota media es: " + nota_media);
+               labelNotamedia.setLayoutY(40);
+               Label labelSuspensas = new Label("Asignaturas suspensas: " + suspensos);
+               labelSuspensas.setLayoutY(60);
+               modalPane.getChildren().addAll(labelNombre, labelNotamedia, labelSuspensas);          
+               Scene modalScene = new Scene(modalPane,500,500);
+               modalStage.setScene(modalScene);
+               
+               modalStage.showAndWait();
+               
+           }
+       });
+        
     }    
 
     @FXML
-    private void onClcik(ActionEvent event) {
+    private void onClcik(ActionEvent event) {   
         
         if(nombre_input.getText() == ""){
             mensaje.setText("el nombre esta Vacio");
         }
         if(apellido_input.getText() == ""){
             mensaje.setText("el apellido esta Vacio");
-        }
-        if(ad_input.getText() == "" && Integer.parseInt(ad_input.getText()) > 0 && Integer.parseInt(ad_input.getText()) < 10){
-            mensaje.setText("la nota de ad es nula");
-        }
-        if(sge_input.getText() == "" && Integer.parseInt(sge_input.getText()) > 0 && Integer.parseInt(sge_input.getText()) < 10){
-            mensaje.setText("la nota de sge es nula");
-        }
-        if(di_input.getText() == "" && Integer.parseInt(di_input.getText()) > 0 && Integer.parseInt(di_input.getText()) < 10){
-            mensaje.setText("la nota de di es nula");
-        }
-        if(pmdm_input.getText() == "" && Integer.parseInt(pmdm_input.getText()) > 0 && Integer.parseInt(pmdm_input.getText()) < 10){
-            mensaje.setText("la nota de pmdm es nula");
-        }
-        if(psp_input.getText() == "" && Integer.parseInt(psp_input.getText()) > 0 && Integer.parseInt(psp_input.getText()) < 10) {
-            mensaje.setText("la nota de psp es nula");
-        }
-        if(eie_input.getText() == "" && Integer.parseInt(eie_input.getText()) > 0 && Integer.parseInt(eie_input.getText()) < 10){
-            mensaje.setText("la nota de eie es nula");
-        }
-        if(hlc_input.getText() == "" && Integer.parseInt(hlc_input.getText()) > 0 && Integer.parseInt(hlc_input.getText()) < 10){
-            mensaje.setText("la nota de hlc es nula");
         }
         else{
              mensaje.setText("");
@@ -130,13 +187,13 @@ public class PrimaryController implements Initializable {
             
             alumno.setNombre(nombre_input.getText());
             alumno.setApellido(apellido_input.getText());
-            alumno.setAd(Integer.parseInt(ad_input.getText()));
-            alumno.setSge(Integer.parseInt(sge_input.getText()));
-            alumno.setDi(Integer.parseInt(di_input.getText()));
-            alumno.setPmdm(Integer.parseInt(pmdm_input.getText()));
-            alumno.setPsp(Integer.parseInt(psp_input.getText()));
-            alumno.setEie(Integer.parseInt(eie_input.getText()));
-            alumno.setHlc(Integer.parseInt(hlc_input.getText()));
+            alumno.setAd(ad_input.getValue());
+            alumno.setSge(sge_input.getValue());
+            alumno.setDi(di_input.getValue());
+            alumno.setPmdm(pmdm_input.getValue());
+            alumno.setPsp(psp_input.getValue());
+            alumno.setEie(eie_input.getValue());
+            alumno.setHlc(hlc_input.getValue());
             
             ObservableList<Alumno> alumnoLista = FXCollections.observableArrayList();
             
