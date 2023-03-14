@@ -4,9 +4,10 @@
  */
 package com.mycompany.examen2trimestrefx;
 
-import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import javax.swing.JFrame;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -19,153 +20,67 @@ import net.sf.jasperreports.swing.JRViewer;
 
 /**
  *
- * @author FranciscoRomeroGuill
+ * @author AlejandroMarínBermúd
  */
-public class Informe {
+public class informe {
+    
+     private static final String USER = "root";
+    private static final String PASSWORD = "";
+    private static final String URL = "jdbc:mysql://localhost:3306/examen2";
 
-    public static void menushowReport() throws JRException, ClassNotFoundException, SQLException {
+   private static Connection conexion;
 
-        HashMap hm = new HashMap();
-
-        String report = "Notas.jasper";
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(
-                report, 
-                hm, 
-                ProductoDAOMySQL.getConnection()
-        );
-
-        JRViewer viewer = new JRViewer(jasperPrint);
-
-        JFrame frame = new JFrame("Menu");
-        frame.getContentPane().add(viewer);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.pack();
-        frame.setVisible(true);
-
-        System.out.print("Done!");
+    static {
+        try {
+            conexion= DriverManager.getConnection(URL,USER,PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    public static void menupdfReport() throws JRException, ClassNotFoundException, SQLException {
-
-        HashMap hm = new HashMap();
-
-
-        String report = "Menu.jasper";
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(
-                report, 
-                hm, 
-               ProductoDAOMySQL.getConnection()
-        );
-        
-        JRPdfExporter exp = new JRPdfExporter();
-        exp.setExporterInput(new SimpleExporterInput(jasperPrint));
-        exp.setExporterOutput(new SimpleOutputStreamExporterOutput("Menu.pdf"));
-        SimplePdfExporterConfiguration conf = new SimplePdfExporterConfiguration();
-        exp.setConfiguration(conf);
-        exp.exportReport();
-
-        System.out.print("Done!");
+     public static Connection getConnection() {
+        return conexion;
     }
     
-    public static void historialshowReport() throws JRException, ClassNotFoundException, SQLException {
-
+    public static void notasShowReport() throws JRException{
+        
         HashMap hm = new HashMap();
-
-        String report = "Historial.jasper";
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(
+        
+         String report = "Examen.jasper";
+         JasperPrint jasperPrint = JasperFillManager.fillReport(
                 report, 
                 hm, 
-                ProductoDAOMySQL.getConnection()
-        );
-
-        JRViewer viewer = new JRViewer(jasperPrint);
-
-        JFrame frame = new JFrame("Historial");
+                informe.getConnection()
+         );
+         
+          JRViewer viewer = new JRViewer(jasperPrint);
+         
+          JFrame frame = new JFrame("Notas");
         frame.getContentPane().add(viewer);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.pack();
         frame.setVisible(true);
 
         System.out.print("Done!");
-    }
-
-    public static void historialpdfReport() throws JRException, ClassNotFoundException, SQLException {
-
-        HashMap hm = new HashMap();
-
-
-        String report = "Historial.jasper";
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(
-                report, 
-                hm, 
-               ProductoDAOMySQL.getConnection()
-        );
         
-        JRPdfExporter exp = new JRPdfExporter();
-        exp.setExporterInput(new SimpleExporterInput(jasperPrint));
-        exp.setExporterOutput(new SimpleOutputStreamExporterOutput("Historial.pdf"));
-        SimplePdfExporterConfiguration conf = new SimplePdfExporterConfiguration();
-        exp.setConfiguration(conf);
-        exp.exportReport();
-
-        System.out.print("Done!");
-    }
-     public static void historialFshowReport(String fecha1, String fecha2) throws JRException, ClassNotFoundException, SQLException {
-
-        HashMap hm = new HashMap();
-        
-         hm.put("fecha1", fecha1);
-         hm.put("fecha2", fecha2);
-
-        String report = "Historial_filtro.jasper";
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(
-                report, 
-                hm, 
-                ProductoDAOMySQL.getConnection()
-        );
- 
-        JRViewer viewer = new JRViewer(jasperPrint);
-
-
-        JFrame frame = new JFrame("Historial_filtro");
-        frame.getContentPane().add(viewer);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.pack();
-        frame.setVisible(true);
-
-        System.out.print("Done!");
-    }
-
-    public static void historialFpdfReport(String fecha1, String fecha2) throws JRException, ClassNotFoundException, SQLException {
-
-        HashMap hm = new HashMap();
-
-         hm.put("fecha1", fecha1);
-         hm.put("fecha2", fecha2);
-
-        String report = "Historial_filtro.jasper";
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(
-                report, 
-                hm, 
-               ProductoDAOMySQL.getConnection()
-        );
-
-        
-        JRPdfExporter exp = new JRPdfExporter();
-        exp.setExporterInput(new SimpleExporterInput(jasperPrint));
-        exp.setExporterOutput(new SimpleOutputStreamExporterOutput("Historial_F.pdf"));
-        SimplePdfExporterConfiguration conf = new SimplePdfExporterConfiguration();
-        exp.setConfiguration(conf);
-        exp.exportReport();
-
-        System.out.print("Done!");
     }
     
+    public static void notasPDFReport() throws JRException{
+        
+        HashMap hm = new HashMap();
+        String report = "Examen.jasper";
+         JasperPrint jasperPrint = JasperFillManager.fillReport(
+                report, 
+                hm, 
+                informe.getConnection()
+         );
+          JRPdfExporter exp = new JRPdfExporter();
+        exp.setExporterInput(new SimpleExporterInput(jasperPrint));
+        exp.setExporterOutput(new SimpleOutputStreamExporterOutput("Notas.pdf"));
+        SimplePdfExporterConfiguration conf = new SimplePdfExporterConfiguration();
+        exp.setConfiguration(conf);
+        exp.exportReport();
 
+        System.out.print("Done!");
+         
+    }
 }

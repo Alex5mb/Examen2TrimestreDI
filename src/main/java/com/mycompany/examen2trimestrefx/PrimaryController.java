@@ -7,11 +7,14 @@ package com.mycompany.examen2trimestrefx;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -27,6 +30,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  * FXML Controller class
@@ -126,9 +130,16 @@ public class PrimaryController implements Initializable {
                Pane modalPane = new Pane();
                modalPane.setStyle("-fx-background-color: white;");
                
-               int nota_media = (alumnoSeleccionado.getAd() + alumnoSeleccionado.getDi()
+               
+               int nota_media = 0;
+               
+               if(alumnoSeleccionado.getAd() >= 5 && alumnoSeleccionado.getDi() >= 5 && alumnoSeleccionado.getEie() >= 5 && alumnoSeleccionado.getHlc() >= 5
+                       && alumnoSeleccionado.getPmdm() >= 5 && alumnoSeleccionado.getPsp() >= 5 && alumnoSeleccionado.getSge() >= 5 ){
+               
+               nota_media = (alumnoSeleccionado.getAd() + alumnoSeleccionado.getDi()
                        + alumnoSeleccionado.getEie() + alumnoSeleccionado.getHlc() + alumnoSeleccionado.getPmdm() +
                        alumnoSeleccionado.getPsp() + alumnoSeleccionado.getSge())/7;
+               }
                
                ArrayList suspensos = new ArrayList();
                
@@ -203,6 +214,26 @@ public class PrimaryController implements Initializable {
             lista_alumno.setItems(alumnoLista);
         }
        
+    }
+
+    @FXML
+    private void onClcikNotas(ActionEvent event) {
+        
+        try{
+            informe.notasShowReport();
+            informe.notasPDFReport();
+        } catch (JRException ex) {
+            Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+    @FXML
+    private void onClcikSalir(ActionEvent event) {
+        
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
     
 }

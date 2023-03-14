@@ -99,12 +99,12 @@
       <VBox alignment="CENTER" prefHeight="548.0" prefWidth="128.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="nuevo_alumno" mnemonicParsing="false" onAction="#onClcik" prefHeight="25.0" prefWidth="107.0" text="Nuevo Alumno" />
-            <Button fx:id="descargar_notas" mnemonicParsing="false" text="Descargar Notas">
+            <Button fx:id="descargar_notas" mnemonicParsing="false" onAction="#onClcikNotas" text="Descargar Notas">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="salir" mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Salir">
+            <Button fx:id="salir" mnemonicParsing="false" onAction="#onClcikSalir" prefHeight="25.0" prefWidth="108.0" text="Salir">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
